@@ -1,9 +1,17 @@
-apply plugin: 'java'
-apply plugin: 'application'
+plugins {
+    id 'java'
+    id 'application'
+}
 
-mainClassName = 'CalendarQuickstart'
-sourceCompatibility = 11
-targetCompatibility = 11
+application {
+    mainClass = 'CalendarQuickstart'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 version = '1.0'
 
 repositories {
@@ -14,4 +22,24 @@ dependencies {
     implementation 'com.google.api-client:google-api-client:2.0.0'
     implementation 'com.google.oauth-client:google-oauth-client-jetty:1.34.1'
     implementation 'com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0'
+    implementation 'com.formdev:flatlaf:3.2.1'
+}
+
+// Task für GUI-Version
+task runGui(type: JavaExec) {
+    group = 'application'
+    description = 'Run the Calendar Export GUI'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'CalendarGUI'
+}
+
+// Task für Kommandozeilen-Version
+task runCli(type: JavaExec) {
+    group = 'application'
+    description = 'Run the Calendar Export CLI'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'CalendarQuickstart'
+    if (project.hasProperty('appArgs')) {
+        args project.appArgs.split(',')
+    }
 }
